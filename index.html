@@ -1,0 +1,50 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DoDuck Search Engine - Search the Web with DoDuck, a simple and powerful search tool.">
+    <meta name="keywords" content="DoDuck, search engine, web search, internet search, search results">
+    <meta name="author" content="Faris">
+    <meta property="og:title" content="DoDuck Search Engine">
+    <meta property="og:description" content="DoDuck Search Engine - Simple, Fast, and Efficient Web Search.">
+    <title>DoDuck Search Engine</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #search-bar {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Welcome to DoDuck Search Engine</h1>
+    <div id="search-form">
+        <input type="text" id="search-bar" placeholder="Enter your search query..." />
+        <button onclick="searchQuery()">Search</button>
+    </div>
+
+    <script>
+        function searchQuery() {
+            const query = document.getElementById('search-bar').value;
+            if (query) {
+                // Redirect to result.html with the search query in the URL
+                window.location.href = `result.html?search?q=${encodeURIComponent(query)}`;
+            }
+        }
+    </script>
+
+</body>
+</html>
