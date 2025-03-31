@@ -38,72 +38,70 @@
     <div id="search-results" class="results"></div>
 
     <script>
-        // List of your API keys
-        const apiKeys = [
+
+
+const apiKeys = [
         "AIzaSyAvzxKzc8e1zlztwRUPaYd3LrepPkCmDHw",
         "AIzaSyAe6_BrizzUzHwOh02WT2Y2TtGked2ffVY",
         "AIzaSyA16DCtOqLYkwGU6xHqWjdIXoKxiwlCmmQ",
         "YOUR_GOOGLE_CSE_API_KEY_4",
         "YOUR_GOOGLE_CSE_API_KEY_5"
     ];
-    let keyIndex = 0;
-    const cx = "42904d739adf44d96"; // Replace with your CSE ID
+    const cx = "42904d739adf44d96';
 
-        // Get the search query from the URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const query = urlParams.get('q'); // Get 'q' from the URL
-        document.getElementById('search-query').innerHTML = `<h2>Results for: "${query}"</h2>`;
 
-        // Function to fetch results from Google CSE
-        async function fetchResults(query, apiKeyIndex = 0) {
-            const apiKey = apiKeys[apiKeyIndex];
-            const url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${apiKey}&cx=${cx}`;
 
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
+    const urlParams = new URLSearchParams(window.location.search);
+    const query = urlParams.get('q');
+    document.getElementById('search-query').innerHTML = `<h2>Results for: "${query}"</h2>`;
 
-                // Check if results exist
-                if (data.items && data.items.length > 0) {
-                    return data.items;
-                } else {
-                    return null;
-                }
-            } catch (error) {
-                console.error('Error fetching search results:', error);
+    async function fetchResults(query, apiKeyIndex = 0) {
+        const apiKey = apiKeys[apiKeyIndex];
+        const url = `https://www.googleapis.com/customsearch/v1?q=${encodeURIComponent(query)}&key=${apiKey}&cx=${cx}`;
+
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            console.log(data);  // Debugging log
+
+            if (data.items && data.items.length > 0) {
+                return data.items;
+            } else {
+                console.log("No results found.");
                 return null;
             }
+        } catch (error) {
+            console.error('Error fetching search results:', error);
+            return null;
+        }
+    }
+
+    async function displayResults(query) {
+        let results = null;
+        let apiKeyIndex = 0;
+
+        while (apiKeyIndex < apiKeys.length && !results) {
+            results = await fetchResults(query, apiKeyIndex);
+            apiKeyIndex++;
         }
 
-        // Function to display results
-        async function displayResults(query) {
-            let results = null;
-            let apiKeyIndex = 0;
-
-            // Try fetching results from all API keys until we get results
-            while (apiKeyIndex < apiKeys.length && !results) {
-                results = await fetchResults(query, apiKeyIndex);
-                apiKeyIndex++;
-            }
-
-            const resultsContainer = document.getElementById('search-results');
-            if (results) {
-                results.forEach(item => {
-                    const resultElement = document.createElement('div');
-                    resultElement.classList.add('result-item');
-                    resultElement.innerHTML = `
-                        <a href="${item.link}" target="_blank">${item.title}</a>
-                        <p>${item.snippet}</p>
-                    `;
-                    resultsContainer.appendChild(resultElement);
-                });
-            } else {
-                resultsContainer.innerHTML = '<p>No results found.</p>';
-            }
+        const resultsContainer = document.getElementById('search-results');
+        if (results) {
+            results.forEach(item => {
+                const resultElement = document.createElement('div');
+                resultElement.classList.add('result-item');
+                resultElement.innerHTML = `
+                    <a href="${item.link}" target="_blank">${item.title}</a>
+                    <p>${item.snippet}</p>
+                `;
+                resultsContainer.appendChild(resultElement);
+            });
+        } else {
+            resultsContainer.innerHTML = '<p>No results found.</p>';
         }
+    }
 
-        // Fetch and display results
-        displayResults(query);
+    displayResults(query);
     </script>
 
 </body>
